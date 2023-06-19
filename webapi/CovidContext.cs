@@ -11,8 +11,10 @@ namespace webapi
 
         public DbSet<User> Users { get; set; }
         public DbSet<CauseType> CauseTypes { get; set; }
+        public DbSet<Disease> Diseases { get; set; }
         public DbSet<District> Districts { get; set; }
         public DbSet<City> Cities { get; set; }
+        public DbSet<CauseDetails> CausesDetails { get; set; }
         public DbSet<Cause> Causes { get; set; }
     }
 }

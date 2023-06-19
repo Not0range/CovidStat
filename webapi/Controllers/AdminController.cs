@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,7 @@ using System.Text;
 
 using webapi.Entities;
 using webapi.Models.Input;
+using webapi.Models.Output;
 
 namespace webapi.Controllers
 {
@@ -21,19 +23,19 @@ namespace webapi.Controllers
             _ctx = ctx;
         }
 
-        [HttpPost("/district")]
+        [HttpPost("district")]
         public async Task<ActionResult> AddDistrict([FromBody] string title)
         {
             var d = await _ctx.Districts.FirstOrDefaultAsync(t => t.Title.ToLower() == title.ToLower());
             if (d != null) return BadRequest();
 
-            await _ctx.Districts.AddAsync(new Entities.District { Title = title });
+            await _ctx.Districts.AddAsync(new District { Title = title });
             await _ctx.SaveChangesAsync();
 
             return Ok();
         }
 
-        [HttpDelete("/district")]
+        [HttpDelete("district")]
         public async Task<ActionResult> RemoveDistrict([FromBody] int id)
         {
             var d = await _ctx.Districts.FirstOrDefaultAsync(t => t.Id == id);
@@ -45,7 +47,7 @@ namespace webapi.Controllers
             return Ok();
         }
 
-        [HttpPost("/city")]
+        [HttpPost("city")]
         public async Task<ActionResult> AddCity([FromBody] CityForm form)
         {
             var d = await _ctx.Districts.FirstOrDefaultAsync(t => t.Id == form.DistrictId);
@@ -61,7 +63,7 @@ namespace webapi.Controllers
             return Ok();
         }
 
-        [HttpDelete("/city")]
+        [HttpDelete("city")]
         public async Task<ActionResult> RemoveCity([FromBody] int id)
         {
             var c = await _ctx.Cities.FirstOrDefaultAsync(t => t.Id == id);
@@ -73,19 +75,19 @@ namespace webapi.Controllers
             return Ok();
         }
 
-        [HttpPost("/type")]
+        [HttpPost("type")]
         public async Task<ActionResult> AddType([FromBody] string title)
         {
             var t = await _ctx.CauseTypes.FirstOrDefaultAsync(t => t.Title.ToLower() == title.ToLower());
             if (t != null) return BadRequest();
 
-            await _ctx.CauseTypes.AddAsync(new Entities.CauseType { Title = title });
+            await _ctx.CauseTypes.AddAsync(new CauseType { Title = title });
             await _ctx.SaveChangesAsync();
 
             return Ok();
         }
 
-        [HttpDelete("/type")]
+        [HttpDelete("type")]
         public async Task<ActionResult> RemoveType([FromBody] int id)
         {
             var t = await _ctx.CauseTypes.FirstOrDefaultAsync(t => t.Id == id);
@@ -97,27 +99,81 @@ namespace webapi.Controllers
             return Ok();
         }
 
-        [HttpPost("/cause")]
-        public async Task<ActionResult> AddCause([FromBody] CauseForm form)
+        [HttpPost("disease")]
+        public async Task<ActionResult> AddDisease([FromBody] string title)
         {
-            var c = await _ctx.Cities.FirstOrDefaultAsync(t => t.Id == form.CityId);
-            var t = await _ctx.CauseTypes.FirstOrDefaultAsync(t => t.Id == form.TypeId);
-            if (c == null || t == null) return BadRequest();
+            var d = await _ctx.Diseases.FirstOrDefaultAsync(t => t.Title.ToLower() == title.ToLower());
+            if (d != null) return BadRequest();
 
-            await _ctx.Causes.AddAsync(new Entities.Cause
+            await _ctx.Diseases.AddAsync(new Disease { Title = title });
+            await _ctx.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpDelete("disease")]
+        public async Task<ActionResult> RemoveDisease([FromBody] int id)
+        {
+            var d = await _ctx.Diseases.FirstOrDefaultAsync(t => t.Id == id);
+            if (d == null) return NotFound();
+
+            _ctx.Diseases.Remove(d);
+            await _ctx.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPost("details")]
+        public async Task<ActionResult> AddDetails([FromBody] DetailsForm form)
+        {
+            var d = await _ctx.CausesDetails.Where(t => t.DiseaseId == form.DiseaseId && t.CauseTypeId == form.TypeId)
+                .FirstOrDefaultAsync(t => t.Details.ToLower() == form.Details.ToLower());
+            if (d != null) return BadRequest();
+
+            await _ctx.CausesDetails.AddAsync(new CauseDetails
             {
-                Date = form.Date,
-                CityId = form.CityId,
-                Age = form.Age,
-                Gender = form.Gender,
-                TypeId = form.TypeId
+                DiseaseId = form.DiseaseId,
+                CauseTypeId = form.TypeId,
+                Details = form.Details
             });
             await _ctx.SaveChangesAsync();
 
             return Ok();
         }
 
-        [HttpDelete("/cause")]
+        [HttpDelete("details")]
+        public async Task<ActionResult> RemoveDetails([FromBody] int id)
+        {
+            var d = await _ctx.CausesDetails.FirstOrDefaultAsync(t => t.Id == id);
+            if (d == null) return NotFound();
+
+            _ctx.CausesDetails.Remove(d);
+            await _ctx.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPost("cause")]
+        public async Task<ActionResult> AddCause([FromBody] CauseForm form)
+        {
+            var c = await _ctx.Cities.FirstOrDefaultAsync(t => t.Id == form.CityId);
+            var t = await _ctx.CauseTypes.FirstOrDefaultAsync(t => t.Id == form.DetailsId);
+            if (c == null || t == null) return BadRequest();
+
+            await _ctx.Causes.AddAsync(new Cause
+            {
+                Date = form.Date,
+                CityId = form.CityId,
+                Age = form.Age,
+                Gender = form.Gender,
+                DetailsId = form.DetailsId
+            });
+            await _ctx.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpDelete("cause")]
         public async Task<ActionResult> RemoveCause([FromBody] int id)
         {
             var t = await _ctx.Causes.FirstOrDefaultAsync(t => t.Id == id);
@@ -147,8 +203,34 @@ namespace webapi.Controllers
             });
             await _ctx.SaveChangesAsync();
 
-            await _ctx.CauseTypes.AddRangeAsync(new string[] { "Заболело", "Выздоровело", "Умерло" }
+            await _ctx.CauseTypes.AddRangeAsync(new string[] { "Заболело", "Выздоровело", "Умерло", "Вакцинировано" }
                 .Select(t => new CauseType { Title = t }).ToArray());
+            await _ctx.SaveChangesAsync();
+
+            await _ctx.Diseases.AddRangeAsync(new string[] { "Covid-19", "Грипп", "Корь" }
+                .Select(t => new Disease { Title = t }).ToArray());
+            await _ctx.SaveChangesAsync();
+
+            for (int i = 1; i <= 3; i++)
+            {
+                for (int j = 1; j <= 4; j++)
+                {
+                    await _ctx.CausesDetails.AddAsync(new CauseDetails
+                    {
+                        DiseaseId = i,
+                        CauseTypeId = j,
+                        Details = "-",
+                        DefaultValue = true
+                    });
+                }
+            }
+            await _ctx.SaveChangesAsync();
+
+            await _ctx.CausesDetails.AddRangeAsync(new CauseDetails[]
+            {
+                new CauseDetails {DiseaseId = 1, CauseTypeId = 4, Details = "Спутник V", DefaultValue = false},
+                new CauseDetails {DiseaseId = 1, CauseTypeId = 4, Details = "AstraZeneca", DefaultValue = false},
+            });
             await _ctx.SaveChangesAsync();
 
             await _ctx.Districts.AddRangeAsync(new string[] { "Тирасполь", "Бендеры", "Слободзейский район" }
@@ -163,17 +245,35 @@ namespace webapi.Controllers
 
             var rand = new Random();
             var b = new DateTime(2022, 1, 1);
-            for (var i = 0; i < 730; i = i++)
+            for (var i = 0; i < 730; i++)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < 20; j++)
                 {
+                    int details = 0;
+                    int type;
+                    int disease = rand.Next(0, 3);
+                    int t = rand.Next(6);
+                    if (t < 3) type = 1;
+                    else if (t == 3) type = 2;
+                    else if (t == 4) type = 3;
+                    else
+                    {
+                        type = 4;
+                        if (disease == 0)
+                        {
+                            if (rand.Next(2) == 1) details = 13;
+                            else details = 14;
+                        }
+                    }
+                    if (details == 0) details = disease * 4 + type;
+
                     await _ctx.Causes.AddAsync(new Cause
                     {
                         Date = b.AddDays(i),
                         CityId = rand.Next(1, 5),
                         Age = 120 + rand.Next(50) * 12,
                         Gender = rand.Next(2) == 1,
-                        TypeId = rand.Next(1, 4)
+                        DetailsId = details
                     });
                 }
                 await _ctx.SaveChangesAsync();

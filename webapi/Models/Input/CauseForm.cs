@@ -13,6 +13,6 @@ namespace webapi.Models.Input
         [Required]
         public bool Gender { get; set; }
         [Required]
-        public int TypeId { get; set; }
+        public int DetailsId { get; set; }
     }
 }

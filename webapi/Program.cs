@@ -11,7 +11,7 @@ builder.Services.AddSwaggerGen();
 
 var connectionString = builder.Configuration.GetConnectionString("Database");
 builder.Services.AddDbContext<CovidContext>(option =>
-    option.UseSqlite(connectionString));
+    option.UseNpgsql(connectionString));
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(option =>
@@ -41,5 +41,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+if (!app.Environment.IsDevelopment())
+    app.MapFallbackToFile("/index.html");
 
 app.Run();

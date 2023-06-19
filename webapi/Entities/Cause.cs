@@ -17,8 +17,8 @@ namespace webapi.Entities
         public int Age { get; set; }
         [Required]
         public bool Gender { get; set; }
-        [ForeignKey(nameof(CauseType))]
-        public int TypeId { get; set; }
-        public CauseType CauseType { get; set; }
+        [ForeignKey(nameof(CauseDetails))]
+        public int DetailsId { get; set; }
+        public CauseDetails CauseDetails { get; set; }
     }
 }
