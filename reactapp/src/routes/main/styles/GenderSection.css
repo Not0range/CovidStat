@@ -1,0 +1,16 @@
+.gender-section {
+    display: flex;
+    padding: 0px 10px;
+}
+
+.gender-section>div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+    margin: 0 5px;
+}
+
+.gender-section h4 {
+    text-align: center;
+}

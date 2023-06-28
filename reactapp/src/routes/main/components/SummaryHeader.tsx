@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import $ from 'jquery';
-import { Summary } from "../../../models/Summary";
-import '../../../styles/SummaryHeader.css';
+import { GeneralSummary, Summary } from "../../../models/Summary";
+import '../styles/SummaryHeader.css';
+import { setSummary, useAppDispatch, useAppSelector } from "../../../store";
 
 export default function SummaryHeader() {
-    const [data, setData] = useState<GeneralSummary[]>([]);
+    const summary = useAppSelector(state => state.main.summary);
+    const dispatcher = useAppDispatch();
 
     useEffect(() => {
         $.ajax('api/data/summary/1', {
@@ -24,23 +26,18 @@ export default function SummaryHeader() {
                     else
                         list[ind].value += item.value;
                 }
-                setData(list);
+                dispatcher(setSummary(list));
             }
         });
     }, []);
 
     return (
         <div className='summary-header'>
-            {data.map((t, i) =>
-                <div className={`summary-header-item${i}`}>
+            {summary.length > 0 && summary.map((t, i) =>
+                <div key={`summary-${i}`} className={`summary-header-item${i}`}>
                     <h1>{t.value}</h1>
                     <h4>{t.title}</h4>
                 </div>)}
         </div>
     )
-}
-
-interface GeneralSummary {
-    title: string;
-    value: number;
 }

@@ -8,5 +8,8 @@ export const chartColors = [
 ]
 
 export const summaryColors = [
-    
+    'rgb(15, 44, 139)',
+    'rgb(32, 75, 69)',
+    'rgb(133, 43, 28)',
+    'rgb(180, 158, 34)'
 ]

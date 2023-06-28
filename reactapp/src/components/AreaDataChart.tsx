@@ -3,12 +3,15 @@ import { KeyValuePair } from "../models/Stats";
 
 export default function AreaDataChart(props: IProps) {
     return (
-        <ResponsiveContainer aspect={2.5} width={'100%'}>
-            <AreaChart data={props.data} width={400} height={400}>
+        <ResponsiveContainer aspect={2.5} width={'100%'} height={'unset'}>
+            <AreaChart
+                data={props.data}
+                margin={{ bottom: 0, top: 0, left: 0, right: 0 }}
+            >
                 <XAxis dataKey={t => t.key} unit={props.unit} />
                 <YAxis />
                 <Tooltip />
-                <Legend />
+                {(props.legendVisible === undefined || props.legendVisible) && <Legend />}
                 {props.types.map((t, i) =>
                     <Area
                         key={`${t}-${i}`}
@@ -28,6 +31,7 @@ interface IProps {
     types: string[];
     colors: string[];
     unit?: string;
+    legendVisible?: boolean;
 }
 
 interface IData {

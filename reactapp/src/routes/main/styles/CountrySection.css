@@ -1,0 +1,69 @@
+.country-section-container {
+    padding: 15px;
+}
+
+.country-section-charts {
+    display: flex;
+    flex-direction: row;
+}
+
+.country-section-charts>div {
+    width: 50%;
+}
+
+.segmented-button {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #C3BDBD;
+    border-radius: 5px;
+    width: fit-content;
+    --active-blue: #3662FF;
+}
+
+.segmented-button div:not(:last-child) {
+    border-right: 1px solid #C3BDBD;
+}
+
+.segmented-button div {
+    padding: 2px 5px;
+    flex-grow: 1;
+    text-align: center;
+    user-select: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    animation: segmented-button-anim-r 300ms both;
+}
+
+.segmented-button div:hover {
+    animation: segmented-button-anim 300ms both;
+}
+
+@keyframes segmented-button-anim {
+    from {
+        background-color: #fff;
+        color: var(--active-blue);
+    }
+
+    to {
+        background-color: var(--active-blue);
+        color: #fff;
+    }
+}
+
+@keyframes segmented-button-anim-r {
+    from {
+        background-color: var(--active-blue);
+        color: #fff;
+    }
+
+    to {
+        background-color: #fff;
+        color: var(--active-blue);
+    }
+}
+
+.close-icon-button {
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+}

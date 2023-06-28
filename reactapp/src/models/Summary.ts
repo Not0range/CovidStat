@@ -3,3 +3,8 @@ export interface Summary {
     details: string;
     value: number;
 }
+
+export interface GeneralSummary {
+    title: string;
+    value: number;
+}

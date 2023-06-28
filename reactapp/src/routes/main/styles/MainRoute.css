@@ -1,0 +1,9 @@
+.main-route-body {
+    display: flex;
+    flex-direction: column;
+    padding: 0 5px;
+}
+
+.main-route-body>h2 {
+    margin-left: 15px;
+}

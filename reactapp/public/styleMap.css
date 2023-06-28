@@ -1,0 +1,75 @@
+.st0 {
+    fill: #bdbcbc;
+    stroke: #FFFFFF;
+    stroke-width: 0.5;
+    stroke-miterlimit: 10;
+}
+
+.st1 {
+    fill: #FFFFFF;
+    stroke: #000000;
+    stroke-width: 0.5;
+    stroke-miterlimit: 10;
+}
+
+.st2 {
+    font-family: 'ArialMT';
+}
+
+.st3 {
+    font-size: 14px;
+}
+
+.st4 {
+    font-size: 10px;
+}
+
+.st5 {
+    fill: #FC0303;
+    stroke: #000000;
+    stroke-width: 0.5;
+    stroke-miterlimit: 10;
+}
+
+.st6 {
+    font-family: 'MyriadPro-Regular';
+}
+
+.st7 {
+    font-size: 10px;
+}
+
+:root {
+    user-select: none;
+}
+
+#RCamenca:hover {
+    fill: #C0A264;
+}
+
+#RRybnica:hover {
+    fill: #7CC5A1;
+}
+
+
+#RDubossary:hover {
+    fill: #EE9B86;
+}
+
+
+#RGrioriopol:hover {
+    fill: #FFFB9D;
+}
+
+
+#RSlobodzia:hover {
+    fill: #A199C4;
+}
+
+#sRTiraspol:hover {
+    fill: #B9DB7D;
+}
+
+#RBendery:hover {
+    fill: #F3AE00;
+}

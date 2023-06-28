@@ -1,36 +1,50 @@
 import { useEffect, useState } from "react";
 import $ from 'jquery';
-import AreaDataChart from "../../components/AreaDataChart";
-import { Stats } from "../../models/Stats";
-import { chartColors } from "../../Utils";
 import SummaryHeader from "./components/SummaryHeader";
+import './styles/MainRoute.css';
+import { Summary } from "../../models/Summary";
+import GenderSection from "./components/GenderSection";
+import MapSection from "./components/MapSection";
 
 export default function MainRoute() {
-    const [dataAge, setDataAge] = useState<Stats[]>([]);
-    const [types, setTypes] = useState<string[]>([]);
-
+    const [countMan, setCountMan] = useState(0);
+    const [countWoman, setCountWoman] = useState(0);
+    
     useEffect(() => {
-        $.ajax('api/data/query/1', {
+        $.ajax('api/data/summary/1', {
             method: 'POST',
             data: JSON.stringify({
-                "xAxis": 1,
-                "beginDate": "2022-01-01",
-                "endDate": "2022-12-31"
+                "gender": false
             }),
             contentType: 'application/json',
             processData: false,
             success: result => {
-                setDataAge(result.causes);
-                const t = (result.causes[0].values as any[]).map(t => t.key);
-                setTypes(t);
+                setCountMan((result.causes as Summary[])[0].value);
+            }
+        });
+    }, []);
+
+    useEffect(() => {
+        $.ajax('api/data/summary/1', {
+            method: 'POST',
+            data: JSON.stringify({
+                "gender": true
+            }),
+            contentType: 'application/json',
+            processData: false,
+            success: result => {
+                setCountWoman((result.causes as Summary[])[0].value);
             }
         });
     }, []);
 
     return (
-        <div>
+        <div className='main-route-body'>
             <SummaryHeader />
-            <AreaDataChart data={dataAge} types={types} colors={chartColors} />
+            <h2>Ситуация COVID-19 по региону</h2>
+            <MapSection />
+            <h2>С начала пандемии было выявлено {countWoman} случаев заболевания женщин и {countMan} мужчин.</h2>
+            <GenderSection />
         </div>
     )
 }

@@ -15,4 +15,5 @@ code {
 :root {
   --disabled-gray: #E3E1E1;
   --active-green: #4A7B39;
+  --border-color: #888484;
 }

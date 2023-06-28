@@ -1,0 +1,39 @@
+.map-section {
+    display: flex;
+    flex-direction: row;
+}
+
+.map-section-map {
+    width: 35%;
+}
+
+.map-section-charts {
+    width: 65%;
+}
+
+.map-section-main {
+    display: flex;
+    flex-direction: column;
+}
+
+.map-section-modal {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    border: 1px solid var(--border-color);
+    box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.35);
+}
+
+.map-section-summary {
+    position: absolute;
+    left: 30%;
+}
+
+.map-section-summary h3 {
+    text-align: end;
+    padding-right: 15px;
+}
