@@ -3,7 +3,7 @@ export interface Stats {
     values: KeyValuePair[];
 }
 
-interface KeyValuePair {
+export interface KeyValuePair {
     key: string;
     value: number;
 }

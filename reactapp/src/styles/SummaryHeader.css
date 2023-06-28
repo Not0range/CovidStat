@@ -1,0 +1,148 @@
+.summary-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.summary-header div {
+    width: 250px;
+    height: 150px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.summary-header div * {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    user-select: none;
+}
+
+.summary-header-item0 {
+    animation: header-item-animation0-r 300ms both;
+}
+
+.summary-header-item0:hover {
+    animation: header-item-animation0 300ms both;
+}
+
+@keyframes header-item-animation0 {
+    from {
+        background-color: #fff;
+        color: rgb(15, 44, 139);
+    }
+
+    to {
+        background-color: rgb(15, 44, 139);
+        color: #fff;
+    }
+}
+
+@keyframes header-item-animation0-r {
+    from {
+        background-color: rgb(15, 44, 139);
+        color: #fff;
+    }
+
+    to {
+        background-color: #fff;
+        color: rgb(15, 44, 139);
+    }
+}
+
+.summary-header-item1 {
+    animation: header-item-animation1-r 300ms both;
+}
+
+.summary-header-item1:hover {
+    animation: header-item-animation1 300ms both;
+}
+
+@keyframes header-item-animation1 {
+    from {
+        background-color: #fff;
+        color: rgb(32, 75, 69);
+    }
+
+    to {
+        background-color: rgb(32, 75, 69);
+        color: #fff;
+    }
+}
+
+@keyframes header-item-animation1-r {
+    from {
+        background-color: rgb(32, 75, 69);
+        color: #fff;
+    }
+
+    to {
+        background-color: #fff;
+        color: rgb(32, 75, 69);
+    }
+}
+
+.summary-header-item2 {
+    animation: header-item-animation2-r 300ms both;
+}
+
+.summary-header-item2:hover {
+    animation: header-item-animation2 300ms both;
+}
+
+@keyframes header-item-animation2 {
+    from {
+        background-color: #fff;
+        color: rgb(133, 43, 28);
+    }
+
+    to {
+        background-color: rgb(133, 43, 28);
+        color: #fff;
+    }
+}
+
+@keyframes header-item-animation2-r {
+    from {
+        background-color: rgb(133, 43, 28);
+        color: #fff;
+    }
+
+    to {
+        background-color: #fff;
+        color: rgb(133, 43, 28);
+    }
+}
+
+.summary-header-item3 {
+    animation: header-item-animation3-r 300ms both;
+}
+
+.summary-header-item3:hover {
+    animation: header-item-animation3 300ms both;
+}
+
+@keyframes header-item-animation3 {
+    from {
+        background-color: #fff;
+        color: rgb(180, 158, 34);
+    }
+
+    to {
+        background-color: rgb(180, 158, 34);
+        color: #fff;
+    }
+}
+
+@keyframes header-item-animation3-r {
+    from {
+        background-color: rgb(180, 158, 34);
+        color: #fff;
+    }
+
+    to {
+        background-color: #fff;
+        color: rgb(180, 158, 34);
+    }
+}

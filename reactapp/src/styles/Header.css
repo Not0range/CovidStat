@@ -1,0 +1,88 @@
+.main-header {
+    display: flex;
+    flex-direction: row;
+    height: 10vh;
+    align-items: center;
+}
+
+.main-header img {
+    height: 100%;
+    object-fit: contain;
+}
+
+.main-header a {
+    margin: 0 2px;
+}
+
+.main-header i {
+    animation: icon-button-anim-r 300ms both;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.main-header i:hover {
+    animation: icon-button-anim 300ms both;
+}
+
+@keyframes icon-button-anim {
+    from {
+        color: var(--active-green);
+        background-color: white;
+    }
+
+    to {
+        color: white;
+        background-color: var(--active-green);
+    }
+}
+
+@keyframes icon-button-anim-r {
+    from {
+        color: white;
+        background-color: var(--active-green);
+    }
+
+    to {
+        color: var(--active-green);
+        background-color: white;
+    }
+}
+
+.account-button {
+    font-size: large;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 2px;
+    background-color: var(--disabled-gray);
+    animation: 300ms hover-animation-r;
+    animation-fill-mode: both;
+}
+
+.account-button:hover {
+    animation: 300ms hover-animation;
+    animation-fill-mode: both;
+}
+
+@keyframes hover-animation {
+    from {
+        background-color: var(--disabled-gray);
+        color: black;
+    }
+
+    to {
+        background-color: var(--active-green);
+        color: white;
+    }
+}
+
+@keyframes hover-animation-r {
+    from {
+        background-color: var(--active-green);
+        color: white;
+    }
+
+    to {
+        background-color: var(--disabled-gray);
+        color: black;
+    }
+}
