@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import $ from 'jquery';
+import moment from 'moment';
 import { Stats } from "../../../models/Stats";
-import { chartColors, summaryColors } from "../../../Utils";
+import { chartColors, periods, summaryColors } from "../../../Utils";
 import AreaDataChart from "../../../components/AreaDataChart";
 import { setCountry, useAppDispatch, useAppSelector } from "../../../store";
 import '../styles/CountrySection.css';
 import { Summary } from "../../../models/Summary";
 import GenderSection from "./GenderSection";
+import HBarDataChart from "../../../components/HBarDataChart";
+import ComboTextbox from "./ComboTextbox";
 
 export default function CountrySection({ id }: IProps) {
     const district = useAppSelector(state => state.main.districts.find(t => t.id == id));
@@ -20,10 +23,18 @@ export default function CountrySection({ id }: IProps) {
 
     const [data, setData] = useState<Stats[]>([]);
     const [cityData, setCityData] = useState<Stats[]>([]);
+
     const [types, setTypes] = useState<string[]>([]);
+    const [checked, setChecked] = useState<boolean[]>([]);
 
     const [summary, setSummary] = useState<Summary[]>([]);
+    const [summaryPeriod, setSummaryPeriod] = useState<Summary[]>([]);
+
     const [citySummary, setCitySummary] = useState<Summary[]>([]);
+    const [citySummaryPeriod, setCitySummaryPeriod] = useState<Summary[]>([]);
+
+    const [period, setPeriod] = useState(0);
+    const [cityPeriod, setCityPeriod] = useState(0);
 
     const city = district?.cities.find(t => t.id == cityId);
     const summaryValues = [
@@ -31,17 +42,29 @@ export default function CountrySection({ id }: IProps) {
         summary.filter(t => t.title == types[1]).map(t => t.value).reduce((p, c) => p + c, 0),
         summary.filter(t => t.title == types[2]).map(t => t.value).reduce((p, c) => p + c, 0),
         summary.filter(t => t.title == types[3]).map(t => t.value).reduce((p, c) => p + c, 0)
-    ]
+    ];
     const citySummaryValues = [
         citySummary.filter(t => t.title == types[0]).map(t => t.value).reduce((p, c) => p + c, 0),
         citySummary.filter(t => t.title == types[1]).map(t => t.value).reduce((p, c) => p + c, 0),
         citySummary.filter(t => t.title == types[2]).map(t => t.value).reduce((p, c) => p + c, 0),
         citySummary.filter(t => t.title == types[3]).map(t => t.value).reduce((p, c) => p + c, 0)
-    ]
+    ];
+
+    const vaccineValues = summaryPeriod.filter(t => t.title == types[3]).map(t => ({
+        key: t.details,
+        value: t.value
+    }));
+    const cityVaccineValues = citySummaryPeriod.filter(t => t.title == types[3]).map(t => ({
+        key: t.details,
+        value: t.value
+    }));
 
     useEffect(() => {
         const r = district?.cities.find(t => t.title.toLowerCase() === text.toLowerCase());
         if (r) {
+            const b = moment().subtract(periods[cityPeriod].days + 1, 'days').format();
+            const e = moment().format();
+
             $.ajax('api/data/summary/1', {
                 method: 'POST',
                 data: JSON.stringify({
@@ -54,11 +77,26 @@ export default function CountrySection({ id }: IProps) {
                     setCitySummary(result.causes);
                 }
             });
+            $.ajax('api/data/summary/1', {
+                method: 'POST',
+                data: JSON.stringify({
+                    cityId: id,
+                    beginDate: b,
+                    endDate: e
+                }),
+                contentType: 'application/json',
+                processData: false,
+                success: result => {
+                    setCitySummaryPeriod(result.causes);
+                }
+            });
             $.ajax('api/data/query/1', {
                 method: 'POST',
                 data: JSON.stringify({
                     xAxis: 0,
-                    cityId: id
+                    cityId: id,
+                    beginDate: b,
+                    endDate: e
                 }),
                 contentType: 'application/json',
                 processData: false,
@@ -69,16 +107,34 @@ export default function CountrySection({ id }: IProps) {
             return;
         }
         setCityId(undefined);
-    }, [text]);
+    }, [text, cityPeriod]);
 
     useEffect(() => {
         if (id === undefined) return;
 
+        const b = moment().subtract(periods[period].days + 1, 'days').format();
+        const e = moment().format();
+
+        $.ajax('api/data/summary/1', {
+            method: 'POST',
+            data: JSON.stringify({
+                districtId: id,
+                beginDate: b,
+                endDate: e
+            }),
+            contentType: 'application/json',
+            processData: false,
+            success: result => {
+                setSummaryPeriod(result.causes);
+            }
+        });
         $.ajax('api/data/query/1', {
             method: 'POST',
             data: JSON.stringify({
                 xAxis: 0,
-                districtId: id
+                districtId: id,
+                beginDate: b,
+                endDate: e
             }),
             contentType: 'application/json',
             processData: false,
@@ -86,9 +142,10 @@ export default function CountrySection({ id }: IProps) {
                 setData(result.causes);
                 const t = (result.causes[0].values as any[]).map(t => t.key);
                 setTypes(t);
+                setChecked(t.map(() => true));
             }
         });
-    }, [id]);
+    }, [id, period]);
 
     useEffect(() => {
         if (id === undefined) return;
@@ -139,12 +196,23 @@ export default function CountrySection({ id }: IProps) {
         });
     }, [cityId, id]);
 
+    useEffect(() => {
+        setCityPeriod(0);
+    }, [cityId]);
+
+    const setType = (i: number) => {
+        const temp = [...checked];
+        temp[i] = !temp[i];
+        setChecked(temp);
+    }
+
     return (
         <div>
             <i className='close-icon-button bx bx-x bx-lg' onClick={() => dispatcher(setCountry(undefined))} />
             {id !== undefined && data.length > 0 && <div className='country-section-container'>
                 <h3>{district?.title ?? ''}</h3>
-                {(district?.cities?.length ?? 0) > 1 && <input type='text' value={text} onChange={(e) => setText(e.target.value)} />}
+                {(district?.cities?.length ?? 0) > 1 &&
+                    <ComboTextbox options={district?.cities?.map(t => t.title ) ?? []} setOption={setText} />}
                 <h3>{city?.title ?? ''}</h3>
                 {city === undefined ?
                     <h4>{'С начала пандемии было '}
@@ -159,21 +227,36 @@ export default function CountrySection({ id }: IProps) {
                         <span style={{ color: summaryColors[2] }}>умерло {citySummaryValues[2]}</span>{' человек, '}
                         <span style={{ color: summaryColors[3] }}>вакцинировалось {citySummaryValues[3]}</span> человек.
                     </h4>}
+                <div className='country-section-perion'>
+                    <h4>Оперативные данные за период: </h4>
+                    <select
+                        value={city === undefined ? period : cityPeriod}
+                        onChange={e => city === undefined ? setPeriod(+e.target.value) : setCityPeriod(+e.target.value)}
+                    >
+                        {periods.map((t, i) => <option key={`opt-${i}`} value={i}>{t.title}</option>)}
+                    </select>
+                </div>
                 <div className='country-section-charts'>
                     <div>
-                        <div className='segmented-button'>
-                            {types.map((t, i) => <div key={`type${i}`}>{t}</div>)}
+                        <div className='country-segmented-button'>
+                            {types.map((t, i) =>
+                                <div
+                                    className={checked.length > 0 && checked[i] ? 'country-segmented-button-selected' : ''}
+                                    key={`type${i}`}
+                                    onClick={() => setType(i)}
+                                >
+                                    {t}
+                                </div>)}
                         </div>
                         <AreaDataChart
                             data={city === undefined ? data : cityData}
-                            types={types}
+                            types={types.filter((t, i) => checked[i])}
                             colors={chartColors}
                         />
                     </div>
                     <div>
-                        <AreaDataChart
-                            data={city === undefined ? data : cityData}
-                            types={types}
+                        <HBarDataChart
+                            data={city === undefined ? vaccineValues : cityVaccineValues}
                             colors={chartColors}
                         />
                     </div>

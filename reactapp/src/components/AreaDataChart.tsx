@@ -3,10 +3,10 @@ import { KeyValuePair } from "../models/Stats";
 
 export default function AreaDataChart(props: IProps) {
     return (
-        <ResponsiveContainer aspect={2.5} width={'100%'} height={'unset'}>
+        <ResponsiveContainer aspect={2} width={'100%'} height={'unset'}>
             <AreaChart
                 data={props.data}
-                margin={{ bottom: 0, top: 0, left: 0, right: 0 }}
+                margin={{ bottom: 2, top: 2, left: 2, right: 2 }}
             >
                 <XAxis dataKey={t => t.key} unit={props.unit} />
                 <YAxis />

@@ -14,6 +14,7 @@
 .map-section-main {
     display: flex;
     flex-direction: column;
+    padding: 0 20px;
 }
 
 .map-section-modal {
@@ -36,4 +37,71 @@
 .map-section-summary h3 {
     text-align: end;
     padding-right: 15px;
+}
+
+.map-section-perion {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.map-section-perion  h4 {
+    margin: 0 5px 0 0;
+}
+
+.map-segmented-button {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #C3BDBD;
+    border-radius: 5px;
+    width: fit-content;
+    --active-blue: #3662FF;
+}
+
+.map-segmented-button div:not(:last-child) {
+    border-right: 1px solid #C3BDBD;
+}
+
+.map-segmented-button div {
+    padding: 2px 5px;
+    flex-grow: 1;
+    text-align: center;
+    user-select: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    animation: map-segmented-button-anim-r 300ms both;
+}
+
+.map-segmented-button div:hover {
+    animation: map-segmented-button-anim 300ms both;
+}
+
+.map-segmented-button-selected {
+    background-color: var(--active-blue) !important;
+    color: #fff !important;
+}
+
+@keyframes map-segmented-button-anim {
+    from {
+        background-color: #fff;
+        color: var(--active-blue);
+    }
+
+    to {
+        background-color: var(--active-blue);
+        color: #fff;
+    }
+}
+
+@keyframes map-segmented-button-anim-r {
+    from {
+        background-color: var(--active-blue);
+        color: #fff;
+    }
+
+    to {
+        background-color: #fff;
+        color: var(--active-blue);
+    }
 }

@@ -1,0 +1,51 @@
+.combotextbox-input {
+    padding: 5px;
+    flex-grow: 1;
+    border: none;
+}
+
+.combotextbox-input:focus-visible {
+    outline: none;
+}
+
+.combotextbox-input-container {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 0 5px;
+    align-items: center;
+}
+
+.combotextbox-input-container i {
+    cursor: pointer;
+}
+
+.combotextbox-container {
+    padding-right: 20px;
+}
+
+.combotextbox-dropdown {
+    position: absolute;
+    border: 1px solid black;
+    z-index: 2;
+    background-color: white;
+    user-select: none;
+}
+
+.combotextbox-dropdown.combotextbox-hidding {
+    display: none;
+}
+
+.combotextbox-dropdown h5 {
+    padding: 5px 20px;
+    margin: 0;
+}
+
+.combotextbox-dropdown h5:hover {
+    background-color: deepskyblue;
+}
+
+.combotextbox-dropdown-selected {
+    background-color: deepskyblue;
+}

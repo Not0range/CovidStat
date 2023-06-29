@@ -11,7 +11,7 @@
     width: 50%;
 }
 
-.segmented-button {
+.country-segmented-button {
     display: flex;
     flex-direction: row;
     border: 1px solid #C3BDBD;
@@ -20,11 +20,11 @@
     --active-blue: #3662FF;
 }
 
-.segmented-button div:not(:last-child) {
+.country-segmented-button div:not(:last-child) {
     border-right: 1px solid #C3BDBD;
 }
 
-.segmented-button div {
+.country-segmented-button div {
     padding: 2px 5px;
     flex-grow: 1;
     text-align: center;
@@ -34,8 +34,13 @@
     animation: segmented-button-anim-r 300ms both;
 }
 
-.segmented-button div:hover {
+.country-segmented-button div:hover {
     animation: segmented-button-anim 300ms both;
+}
+
+.country-segmented-button-selected {
+    background-color: var(--active-blue) !important;
+    color: #fff !important;
 }
 
 @keyframes segmented-button-anim {
@@ -66,4 +71,15 @@
     position: absolute;
     right: 0;
     cursor: pointer;
+}
+
+.country-section-perion {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.country-section-perion h4 {
+    margin: 0 5px 0 0;
 }
