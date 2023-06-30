@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { chartColors, periods } from "../../../Utils";
 import '../styles/TableSection.css';
 import { Stats } from '../../../models/Stats';
-import { useAppSelector } from '../../../store';
+import { useAppSelector } from '../../../store/store';
 
 export default function TableSection() {
     const types = useAppSelector(state => state.main.types);
@@ -44,8 +44,10 @@ export default function TableSection() {
             </div>
             <table>
                 <thead>
-                    <th>Район</th>
-                    {types.map((t, i) => <th key={`th-${i}`}>{t}</th>)}
+                    <tr>
+                        <th>Район</th>
+                        {types.map((t, i) => <th key={`th-${i}`}>{t}</th>)}
+                    </tr>
                 </thead>
                 <tbody>
                     {data.map((t, i) =>
@@ -54,7 +56,7 @@ export default function TableSection() {
                             {t.values.map((t2, i2) =>
                                 <td key={`td-${i}-${i2}`}>
                                     <div className='table-section-cell'>
-                                        <div className='table-section-indicator' style={{backgroundColor: chartColors[i2]}} />
+                                        <div className='table-section-indicator' style={{ backgroundColor: chartColors[i2] }} />
                                         {t2.value}
                                     </div>
                                 </td>)}
