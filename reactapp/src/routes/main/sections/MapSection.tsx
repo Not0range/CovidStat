@@ -8,11 +8,11 @@ import { useEffect, useState } from 'react';
 import { Stats } from '../../../models/Stats';
 import AreaDataChart from '../../../components/AreaDataChart';
 import BarDataChart from '../../../components/BarDataChart';
+import SegmentedButton from '../components/SegmentedButton';
 
 export default function MapSection() {
     const country = useAppSelector(state => state.main.selectedCountry);
     const summary = useAppSelector(state => state.main.summary);
-    const dispatcher = useAppDispatch();
 
     const [period, setPeriod] = useState(0);
 
@@ -58,6 +58,88 @@ export default function MapSection() {
         });
     }, [period]);
 
+    const setType = (i: number) => {
+        const temp = [...checked];
+        temp[i] = !temp[i];
+        setChecked(temp);
+    }
+
+    return (
+        <div>
+            <div className='map-section'>
+                <Map />
+                <div className='map-section-charts'>
+                    {country === undefined && summary.length > 0 && <div className='map-section-main'>
+                        <h3>
+                            {'С начала пандемии на территории Приднестровья было '}
+                            <span style={{ color: summaryColors[0] }}>выявлено {summary[0].value}</span> {'случаев заболевания, '}
+                            <span style={{ color: summaryColors[1] }}>выздоровело {summary[1].value}</span> {'человек, '}
+                            <span style={{ color: summaryColors[2] }}>умерло {summary[2].value}</span> {'человек, '}
+                            <span style={{ color: summaryColors[3] }}>вакцинировалось {summary[3].value}</span> человек.
+                        </h3>
+                        <div className='map-section-perion'>
+                            <h4>Оперативные данные за период: </h4>
+                            <select
+                                value={period}
+                                onChange={e => setPeriod(+e.target.value)}
+                            >
+                                {periods.map((t, i) => <option key={`opt-${i}`} value={i}>{t.title}</option>)}
+                            </select>
+                        </div>
+                        <SegmentedButton values={types} checked={checked} setValue={setType} />
+                        <AreaDataChart
+                            data={dataTime}
+                            types={types.filter((t, i) => checked[i])}
+                            colors={chartColors}
+                        />
+                        <BarDataChart
+                            data={dataDistrict}
+                            types={types.filter((t, i) => checked[i])}
+                            colors={chartColors}
+                        />
+                    </div>}
+                    {country !== undefined && <div className='map-section-modal'>
+                        <CountrySection id={country} />
+                    </div>}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function Map() {
+    const country = useAppSelector(state => state.main.selectedCountry);
+    const dispatcher = useAppDispatch();
+
+    useEffect(() => {
+        const embed = $('#map-object').contents();
+
+        embed.find('.selected').removeClass('selected');
+        switch (country) {
+            case 1:
+                embed.find('#sRTiraspol').addClass('selected');
+                break;
+            case 2:
+                embed.find('#RBendery').addClass('selected');
+                break;
+            case 3:
+                embed.find('#RSlobodzia').addClass('selected');
+                break;
+            case 4:
+                embed.find('#RGrioriopol').addClass('selected');
+                break;
+            case 5:
+                embed.find('#RDubossary').addClass('selected');
+                break;
+            case 6:
+                embed.find('#RRybnica').addClass('selected');
+                break;
+            case 7:
+                embed.find('#RCamenca').addClass('selected');
+                break;
+        }
+    }, [country]);
+
     const countryClick = (id: number | undefined, event: JQuery.ClickEvent) => {
         dispatcher(setCountry(id));
         event.stopPropagation();
@@ -76,63 +158,9 @@ export default function MapSection() {
         embed.find('#Tiraspol').on('click', (event) => countryClick(1, event));
     }
 
-    const setType = (i: number) => {
-        const temp = [...checked];
-        temp[i] = !temp[i];
-        setChecked(temp);
-    }
-
     return (
-        <div>
-            <div className='map-section'>
-                <div className='map-section-map'>
-                    <object id='map-object' type='image/svg+xml' data='map.svg' onLoad={onLoad} />
-                </div>
-                <div className='map-section-charts'>
-
-                    {country === undefined && <div className='map-section-main'>
-                        <h3>
-                            {'С начала пандемии на территории Приднестровья было '}
-                            <span style={{ color: summaryColors[0] }}>выявлено {summary[0].value}</span> {'случаев заболевания, '}
-                            <span style={{ color: summaryColors[1] }}>выздоровело {summary[1].value}</span> {'человек, '}
-                            <span style={{ color: summaryColors[2] }}>умерло {summary[2].value}</span> {'человек, '}
-                            <span style={{ color: summaryColors[3] }}>вакцинировалось {summary[3].value}</span> человек.
-                        </h3>
-                        <div className='map-section-perion'>
-                            <h4>Оперативные данные за период: </h4>
-                            <select
-                                value={period}
-                                onChange={e => setPeriod(+e.target.value)}
-                            >
-                                {periods.map((t, i) => <option key={`opt-${i}`} value={i}>{t.title}</option>)}
-                            </select>
-                        </div>
-                        <div className='map-segmented-button'>
-                            {types.map((t, i) =>
-                                <div
-                                    className={checked.length > 0 && checked[i] ? 'map-segmented-button-selected' : ''}
-                                    key={`type${i}`}
-                                    onClick={() => setType(i)}
-                                >
-                                    {t}
-                                </div>)}
-                        </div>
-                        <AreaDataChart
-                            data={dataTime}
-                            types={types.filter((t, i) => checked[i])}
-                            colors={chartColors}
-                        />
-                        <BarDataChart
-                            data={dataDistrict}
-                            types={types.filter((t, i) => checked[i])}
-                            colors={chartColors}
-                        />
-                    </div>}
-                    {country !== undefined && <div className='map-section-modal'>
-                        <CountrySection id={country} />
-                    </div>}
-                </div>
-            </div>
+        <div className='map-section-map'>
+            <object id='map-object' type='image/svg+xml' data='map.svg' onLoad={onLoad} />
         </div>
     );
 }

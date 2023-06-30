@@ -73,3 +73,34 @@
 #RBendery:hover {
     fill: #F3AE00;
 }
+
+#RCamenca.selected {
+    fill: #C0A264;
+}
+
+#RRybnica.selected {
+    fill: #7CC5A1;
+}
+
+
+#RDubossary.selected {
+    fill: #EE9B86;
+}
+
+
+#RGrioriopol.selected {
+    fill: #FFFB9D;
+}
+
+
+#RSlobodzia.selected {
+    fill: #A199C4;
+}
+
+#sRTiraspol.selected {
+    fill: #B9DB7D;
+}
+
+#RBendery.selected {
+    fill: #F3AE00;
+}

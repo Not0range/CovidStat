@@ -9,7 +9,8 @@ import '../styles/CountrySection.css';
 import { Summary } from "../../../models/Summary";
 import GenderSection from "./GenderSection";
 import HBarDataChart from "../../../components/HBarDataChart";
-import ComboTextbox from "./ComboTextbox";
+import ComboTextbox from "../components/ComboTextbox";
+import SegmentedButton from "../components/SegmentedButton";
 
 export default function CountrySection({ id }: IProps) {
     const district = useAppSelector(state => state.main.districts.find(t => t.id == id));
@@ -140,6 +141,7 @@ export default function CountrySection({ id }: IProps) {
             processData: false,
             success: result => {
                 setData(result.causes);
+                if (result.causes.length == 0) return;
                 const t = (result.causes[0].values as any[]).map(t => t.key);
                 setTypes(t);
                 setChecked(t.map(() => true));
@@ -174,7 +176,8 @@ export default function CountrySection({ id }: IProps) {
             contentType: 'application/json',
             processData: false,
             success: result => {
-                setCountMan((result.causes as Summary[])[0].value);
+                if (result.causes.length > 0)
+                    setCountMan((result.causes as Summary[])[0].value);
             }
         });
     }, [cityId, id]);
@@ -191,7 +194,8 @@ export default function CountrySection({ id }: IProps) {
             contentType: 'application/json',
             processData: false,
             success: result => {
-                setCountWoman((result.causes as Summary[])[0].value);
+                if (result.causes.length > 0)
+                    setCountWoman((result.causes as Summary[])[0].value);
             }
         });
     }, [cityId, id]);
@@ -212,7 +216,7 @@ export default function CountrySection({ id }: IProps) {
             {id !== undefined && data.length > 0 && <div className='country-section-container'>
                 <h3>{district?.title ?? ''}</h3>
                 {(district?.cities?.length ?? 0) > 1 &&
-                    <ComboTextbox options={district?.cities?.map(t => t.title ) ?? []} setOption={setText} />}
+                    <ComboTextbox options={district?.cities?.map(t => t.title) ?? []} setOption={setText} />}
                 <h3>{city?.title ?? ''}</h3>
                 {city === undefined ?
                     <h4>{'С начала пандемии было '}
@@ -238,16 +242,7 @@ export default function CountrySection({ id }: IProps) {
                 </div>
                 <div className='country-section-charts'>
                     <div>
-                        <div className='country-segmented-button'>
-                            {types.map((t, i) =>
-                                <div
-                                    className={checked.length > 0 && checked[i] ? 'country-segmented-button-selected' : ''}
-                                    key={`type${i}`}
-                                    onClick={() => setType(i)}
-                                >
-                                    {t}
-                                </div>)}
-                        </div>
+                        <SegmentedButton values={types} checked={checked} setValue={setType} />
                         <AreaDataChart
                             data={city === undefined ? data : cityData}
                             types={types.filter((t, i) => checked[i])}

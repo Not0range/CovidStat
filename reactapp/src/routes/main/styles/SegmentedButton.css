@@ -1,0 +1,66 @@
+.segmented-button {
+    --active-blue: #3662FF;
+    --br: 8px;
+
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #C3BDBD;
+    border-radius: var(--br);
+    width: fit-content;
+}
+
+.segmented-button div:first-child {
+    border-radius: var(--br) 0 0 var(--br);
+}
+
+.segmented-button div:last-child {
+    border-radius: 0 var(--br) var(--br) 0;
+}
+
+.segmented-button div:not(:last-child) {
+    border-right: 1px solid #C3BDBD;
+}
+
+.segmented-button div {
+    padding: 2px 5px;
+    flex-grow: 1;
+    text-align: center;
+    user-select: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    clip-rule: nonzero;
+    animation: segmented-button-anim-r 300ms both;
+}
+
+.segmented-button div:hover {
+    animation: segmented-button-anim 300ms both;
+}
+
+.segmented-button-selected {
+    background-color: var(--active-blue) !important;
+    color: #fff !important;
+}
+
+@keyframes segmented-button-anim {
+    from {
+        background-color: transparent;
+        color: var(--active-blue);
+    }
+
+    to {
+        background-color: var(--active-blue);
+        color: #fff;
+    }
+}
+
+@keyframes segmented-button-anim-r {
+    from {
+        background-color: var(--active-blue);
+        color: #fff;
+    }
+
+    to {
+        background-color: transparent;
+        color: var(--active-blue);
+    }
+}

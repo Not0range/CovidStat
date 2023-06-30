@@ -3,8 +3,9 @@ import $ from 'jquery';
 import SummaryHeader from "./components/SummaryHeader";
 import './styles/MainRoute.css';
 import { Summary } from "../../models/Summary";
-import GenderSection from "./components/GenderSection";
-import MapSection from "./components/MapSection";
+import GenderSection from "./sections/GenderSection";
+import MapSection from "./sections/MapSection";
+import TableSection from "./sections/TableSection";
 
 export default function MainRoute() {
     const [countMan, setCountMan] = useState(0);
@@ -45,6 +46,7 @@ export default function MainRoute() {
             <MapSection />
             <h2>С начала пандемии было выявлено {countWoman} случаев заболевания женщин и {countMan} мужчин.</h2>
             <GenderSection />
+            <TableSection />
         </div>
     )
 }

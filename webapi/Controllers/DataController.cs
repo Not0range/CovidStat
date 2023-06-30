@@ -69,11 +69,11 @@ namespace webapi.Controllers
         {
             if (!await _ctx.Diseases.AnyAsync(t => t.Id == id)) return BadRequest();
 
+            var details = _ctx.CausesDetails.Include(t => t.CauseType).Where(t => t.DiseaseId == id).ToList();
             IQueryable<Cause> data = _ctx.Causes
                 .Where(t => t.CauseDetails.DiseaseId == id)
                 .Include(t => t.CauseDetails).Include(t => t.CauseDetails.CauseType)
                 .Include(t => t.City);
-
 
             if (form.BeginDate.HasValue)
                 data = data.Where(t => t.Date >= form.BeginDate.Value);
@@ -90,21 +90,28 @@ namespace webapi.Controllers
             else if (form.DistrictId.HasValue)
                 data = data.Where(t => t.City.DistrictId == form.DistrictId.Value);
 
-
-            var result = data.GroupBy(t => t.CauseDetails.Id).Select(t => new CauseModel
+            var result = details.GroupJoin(data.AsEnumerable(), t => t.Id, t => t.DetailsId, (d, c) => new CauseModel
             {
-                Id = t.First().CauseDetails.CauseTypeId,
-                Title = t.First().CauseDetails.CauseType.Title,
-                Details = t.First().CauseDetails.DefaultValue ? null : t.First().CauseDetails.Details,
-                Value = t.Count()
-            }).OrderBy(t => t.Id);
+                Id = d.CauseTypeId,
+                Title = d.CauseType.Title,
+                Details = d.DefaultValue ? null : d.Details,
+                Value = c.Count()
+            });
+
+            //var result = data.GroupBy(t => t.CauseDetails.Id).Select(t => new CauseModel
+            //{
+            //    Id = t.First().CauseDetails.CauseTypeId,
+            //    Title = t.First().CauseDetails.CauseType.Title,
+            //    Details = t.First().CauseDetails.DefaultValue ? null : t.First().CauseDetails.Details,
+            //    Value = t.Count()
+            //}).OrderBy(t => t.Id);
 
             return new SummaryModel
             {
                 DiseaseId = id,
                 Disease = _ctx.Diseases.First(t => t.Id == id).Title,
                 Query = form,
-                Causes = result
+                Causes = result.Where(t => t.Details != null || result.Count(t2 => t.Id == t2.Id) == 1)
             };
         }
 
@@ -145,35 +152,35 @@ namespace webapi.Controllers
                     r = data.GroupBy(t => t.Date).AsEnumerable().Select(t => new StatsItem
                     {
                         Key = t.Key.ToShortDateString(),
-                        Values = details ? _createDictWithDetails(t, causeDetails) : _createDict(t, types)
+                        Values = details ? _createDictWithDetails(causeDetails, t) : _createDict(types, t)
                     });
                     break;
                 case XAxis.Age:
                     r = data.GroupBy(t => t.Age).AsEnumerable().Select(t => new StatsItem
                     {
                         Key = t.Key.ToString(),
-                        Values = details ? _createDictWithDetails(t, causeDetails) : _createDict(t, types)
+                        Values = details ? _createDictWithDetails(causeDetails, t) : _createDict(types, t)
                     });
                     break;
                 case XAxis.Gender:
                     r = data.GroupBy(t => t.Gender).AsEnumerable().Select(t => new StatsItem
                     {
                         Key = t.Key ? "1" : "0",
-                        Values = details ? _createDictWithDetails(t, causeDetails) : _createDict(t, types)
+                        Values = details ? _createDictWithDetails(causeDetails, t) : _createDict(types, t)
                     });
                     break;
                 case XAxis.District:
                     r = data.GroupBy(t => t.City.DistrictId).AsEnumerable().Select(t => new StatsItem
                     {
                         Key = t.First().City.District.Title,
-                        Values = details ? _createDictWithDetails(t, causeDetails) : _createDict(t, types)
+                        Values = details ? _createDictWithDetails(causeDetails, t) : _createDict(types, t)
                     });
                     break;
                 case XAxis.City:
                     r = data.GroupBy(t => t.CityId).AsEnumerable().Select(t => new StatsItem
                     {
                         Key = t.First().City.Title,
-                        Values = details ? _createDictWithDetails(t, causeDetails) : _createDict(t, types)
+                        Values = details ? _createDictWithDetails(causeDetails, t) : _createDict(types, t)
                     });
                     break;
             }
@@ -187,33 +194,21 @@ namespace webapi.Controllers
             };
         }
 
-        private IEnumerable<KeyValuePair<string, int>> _createDict<T>(IGrouping<T, Cause> group, IEnumerable<CauseType> types)
+        private IEnumerable<KeyValuePair<string, int>> _createDictWithDetails<T>(
+            IEnumerable<CauseDetails> details,
+            IGrouping<T, Cause> groups)
         {
-            var dict = new Dictionary<string, int>(group.GroupBy(t2 => t2.CauseDetails.CauseType.Id)
-                        .Select(t2 => new KeyValuePair<string, int>(t2.First().CauseDetails.CauseType.Title, t2.Count())));
-            foreach (var key in types)
-                dict.TryAdd(key.Title, 0);
-            return dict;
+            return details.GroupJoin(groups, t2 => t2.Id, t2 => t2.DetailsId,
+                (d, c) => new KeyValuePair<string, int>(d.DefaultValue ? d.CauseType.Title :
+                $"{d.CauseType.Title} - {d.Details}", c.Count()));
         }
 
-        private IEnumerable<KeyValuePair<string, int>> _createDictWithDetails<T>(IGrouping<T, Cause> group, IEnumerable<CauseDetails> details)
+        private IEnumerable<KeyValuePair<string, int>> _createDict<T>(
+            IEnumerable<CauseType> types,
+            IGrouping<T, Cause> groups)
         {
-            var dict = new Dictionary<string, int>(group.GroupBy(t2 => t2.CauseDetails.Id)
-                        .Select(t2 =>
-                        {
-                            var d = t2.First().CauseDetails;
-                            return new KeyValuePair<string, int>(d.DefaultValue ? d.CauseType.Title : 
-                                $"{d.CauseType.Title} - {d.Details}", t2.Count());
-                        }));
-            foreach (var key in details)
-            {
-                if (key.DefaultValue && details.Count(t => t.CauseTypeId == key.CauseTypeId) > 1)
-                    continue;
-                dict.TryAdd(key.DefaultValue ? key.CauseType.Title :
-                    $"{key.CauseType.Title} - {key.Details}", 0);
-            }
-                
-            return dict;
+            return types.GroupJoin(groups, t2 => t2.Id, t2 => t2.CauseDetails.CauseTypeId,
+                (d, c) => new KeyValuePair<string, int>(d.Title, c.Count()));
         }
-}
+    }
 }
