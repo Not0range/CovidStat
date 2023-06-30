@@ -149,11 +149,11 @@ function Map() {
         const embed = $('#map-object').contents();
         embed.find('svg').on('click', (event) => countryClick(undefined, event));
 
-        embed.find('#Kamenka').on('click', (event) => countryClick(0, event));
+        embed.find('#Kamenka').on('click', (event) => countryClick(7, event));
         embed.find('#Bendery').on('click', (event) => countryClick(2, event));
-        embed.find('#Rybnica').on('click', (event) => countryClick(0, event));
-        embed.find('#Dubossary').on('click', (event) => countryClick(0, event));
-        embed.find('#Grioriopol').on('click', (event) => countryClick(0, event));
+        embed.find('#Rybnica').on('click', (event) => countryClick(6, event));
+        embed.find('#Dubossary').on('click', (event) => countryClick(5, event));
+        embed.find('#Grioriopol').on('click', (event) => countryClick(4, event));
         embed.find('#Slobodzia').on('click', (event) => countryClick(3, event));
         embed.find('#Tiraspol').on('click', (event) => countryClick(1, event));
     }
