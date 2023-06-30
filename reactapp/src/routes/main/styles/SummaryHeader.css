@@ -3,6 +3,7 @@
     flex-direction: row;
     justify-content: center;
     flex-wrap: wrap;
+    background-color: var(--highligth-bg);
 
     --summary-color0: rgb(15, 44, 139);
     --summary-color1: rgb(32, 75, 69);
@@ -34,7 +35,7 @@
 
 @keyframes header-item-animation0 {
     from {
-        background-color: #fff;
+        background-color: transparent;
         color: var(--summary-color0);
     }
 
@@ -51,7 +52,7 @@
     }
 
     to {
-        background-color: #fff;
+        background-color: transparent;
         color: var(--summary-color0);
     }
 }
@@ -66,7 +67,7 @@
 
 @keyframes header-item-animation1 {
     from {
-        background-color: #fff;
+        background-color: transparent;
         color: var(--summary-color1);
     }
 
@@ -83,7 +84,7 @@
     }
 
     to {
-        background-color: #fff;
+        background-color: transparent;
         color: var(--summary-color1);
     }
 }
@@ -98,7 +99,7 @@
 
 @keyframes header-item-animation2 {
     from {
-        background-color: #fff;
+        background-color: transparent;
         color: var(--summary-color2);
     }
 
@@ -115,7 +116,7 @@
     }
 
     to {
-        background-color: #fff;
+        background-color: transparent;
         color: var(--summary-color2);
     }
 }
@@ -130,7 +131,7 @@
 
 @keyframes header-item-animation3 {
     from {
-        background-color: #fff;
+        background-color: transparent;
         color: var(--summary-color3);
     }
 
@@ -147,7 +148,7 @@
     }
 
     to {
-        background-color: #fff;
+        background-color: transparent;
         color: var(--summary-color3);
     }
 }
