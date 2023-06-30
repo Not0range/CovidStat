@@ -20,8 +20,20 @@ namespace webapi.Controllers
             _ctx = ctx;
         }
 
+        [HttpGet("[action]"), Authorize]
+        public async Task<ActionResult<string>> Check()
+        {
+            var username = User.Claims.FirstOrDefault(t => t.Type == ClaimTypes.GivenName)?.Value;
+            if (username == null)
+            {
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                return Unauthorized();
+            }
+            return username;
+        }
+
         [HttpPost("[action]")]
-        public async Task<ActionResult> Login([FromForm] LoginForm form)
+        public async Task<ActionResult<string>> Login([FromForm] LoginForm form)
         {
             var user = await _ctx.Users.AsNoTracking()
                 .FirstOrDefaultAsync(t => t.Username == form.Username.ToLower());
@@ -47,7 +59,7 @@ namespace webapi.Controllers
                 {
                     ExpiresUtc = DateTimeOffset.UtcNow.AddDays(1)
                 });
-            return Ok();
+            return user.Username;
         }
 
         [HttpGet("[action]"), Authorize]

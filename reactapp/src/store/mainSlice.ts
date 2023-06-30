@@ -1,9 +1,8 @@
-import { PayloadAction, configureStore, createSlice } from "@reduxjs/toolkit";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { GeneralSummary } from "./models/Summary";
-import { FullDistrict } from "./models/District";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { FullDistrict } from "../models/District";
+import { GeneralSummary } from "../models/Summary";
 
-const mainSlice = createSlice({
+export const mainSlice = createSlice({
     name: 'main',
     initialState: {
         summary: [],
@@ -36,17 +35,5 @@ interface IState {
     types: string[];
     username?: string;
 }
-
-export const store = configureStore({
-    reducer: {
-        main: mainSlice.reducer
-    }
-});
-
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
-
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
-export const useAppDispatch: () => AppDispatch = useDispatch;
 
 export const { setCountry, setSummary, setDistricts, setTypes, setUsername } = mainSlice.actions;

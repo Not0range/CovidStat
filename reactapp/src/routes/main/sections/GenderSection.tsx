@@ -4,7 +4,7 @@ import $ from 'jquery';
 import AreaDataChart from "../../../components/AreaDataChart";
 import { Stats } from "../../../models/Stats";
 import '../styles/GenderSection.css';
-import { useAppSelector } from "../../../store";
+import { useAppSelector } from "../../../store/store";
 
 export default function GenderSection({cityId, districtId}: IProps) {
     const types = useAppSelector(state => state.main.types);

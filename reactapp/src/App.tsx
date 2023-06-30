@@ -2,12 +2,21 @@ import $ from 'jquery';
 import { Outlet } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import { setDistricts, setTypes, useAppDispatch } from "./store";
+import { setDistricts, setTypes, setUsername } from "./store/mainSlice";
 import { useEffect } from "react";
 import { City, District } from './models/District';
+import { useAppDispatch, useAppSelector } from './store/store';
 
 export default function App() {
     const dispatcher = useAppDispatch();
+
+    useEffect(() => {
+        $.ajax('api/account/check', {
+            success: result => {
+                dispatcher(setUsername(result));
+            }
+        })
+    }, [])
 
     useEffect(() => {
         $.ajax('api/data/causeTypes', {

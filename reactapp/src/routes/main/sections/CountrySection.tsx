@@ -4,13 +4,14 @@ import moment from 'moment';
 import { Stats } from "../../../models/Stats";
 import { chartColors, periods, summaryColors } from "../../../Utils";
 import AreaDataChart from "../../../components/AreaDataChart";
-import { setCountry, useAppDispatch, useAppSelector } from "../../../store";
+import { useAppDispatch, useAppSelector } from "../../../store/store";
 import '../styles/CountrySection.css';
 import { Summary } from "../../../models/Summary";
 import GenderSection from "./GenderSection";
 import HBarDataChart from "../../../components/HBarDataChart";
 import ComboTextbox from "../components/ComboTextbox";
 import SegmentedButton from "../components/SegmentedButton";
+import { setCountry } from "../../../store/mainSlice";
 
 export default function CountrySection({ id }: IProps) {
     const types = useAppSelector(state => state.main.types);

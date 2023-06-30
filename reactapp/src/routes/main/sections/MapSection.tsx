@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import moment from 'moment';
 import '../styles/MapSection.css';
-import { setCountry, useAppDispatch, useAppSelector } from '../../../store';
+import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { chartColors, periods, summaryColors } from '../../../Utils';
 import CountrySection from './CountrySection';
 import { useEffect, useState } from 'react';
@@ -9,6 +9,7 @@ import { Stats } from '../../../models/Stats';
 import AreaDataChart from '../../../components/AreaDataChart';
 import BarDataChart from '../../../components/BarDataChart';
 import SegmentedButton from '../components/SegmentedButton';
+import { setCountry } from '../../../store/mainSlice';
 
 export default function MapSection() {
     const types = useAppSelector(state => state.main.types);

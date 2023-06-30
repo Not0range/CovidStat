@@ -18,3 +18,7 @@ code {
   --border-color: #888484;
   --highligth-bg: rgba(217, 217, 217, 0.6);
 }
+
+body.no-scroll {
+  overflow: hidden;
+}

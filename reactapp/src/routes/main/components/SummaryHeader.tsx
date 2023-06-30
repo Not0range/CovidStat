@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import $ from 'jquery';
 import { GeneralSummary, Summary } from "../../../models/Summary";
 import '../styles/SummaryHeader.css';
-import { setSummary, useAppDispatch, useAppSelector } from "../../../store";
+import { useAppDispatch, useAppSelector } from "../../../store/store";
+import { setSummary } from "../../../store/mainSlice";
 
 export default function SummaryHeader() {
     const summary = useAppSelector(state => state.main.summary);
