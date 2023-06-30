@@ -38,6 +38,11 @@
     border-bottom: 1px solid black;
 }
 
+.table-section-main tbody {
+    max-height: 500px;
+    overflow-y: scroll;
+}
+
 .table-section-main th {
     text-align: start;
     padding: 5px 0;

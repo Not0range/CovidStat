@@ -21,6 +21,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         option.Cookie.SameSite = SameSiteMode.None;
         option.AccessDeniedPath = string.Empty;
     });
+builder.Services.AddLogging();
 
 var app = builder.Build();
 

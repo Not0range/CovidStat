@@ -61,8 +61,8 @@ export default function Header() {
                     </div>
             }
             <div
-                className='login-dialog'
-                style={{ display: dialog ? '' : 'none' }}
+                className={'login-dialog' + (!dialog ? ' login-dialog-hide' : '')}
+                
                 onClick={e => { if (e.target == e.currentTarget) dispatcher(setLoginDialog(false)); }}
             >
                 <div className='login-dialog-container'>

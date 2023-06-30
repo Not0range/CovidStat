@@ -24,4 +24,31 @@
     <PackageReference Include="Toolbelt.EntityFrameworkCore.IndexAttribute.Attribute" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="InitialData\Districts\1.Тирасполь.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="InitialData\Districts\2.Бендеры.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="InitialData\Districts\3.Слободзейский район.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="InitialData\Districts\4.Григориопольский район.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="InitialData\Districts\5.Дубоссарский район.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="InitialData\Districts\6.Рыбницкий район.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="InitialData\Districts\7.Каменский район.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="InitialData\summary.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

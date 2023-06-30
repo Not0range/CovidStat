@@ -50,17 +50,18 @@ namespace webapi.Controllers
             return _ctx.Diseases;
         }
 
-        [HttpGet("[action]")]
-        public ActionResult<IEnumerable<DetailsModel>> Details()
+        [HttpGet("[action]/{id}")]
+        public ActionResult<IEnumerable<DetailsModel>> Details(int id)
         {
-            return Ok(_ctx.CausesDetails.Select(t => new DetailsModel
+            var details = _ctx.CausesDetails.Include(t => t.CauseType).Where(t => t.DiseaseId == id).ToList();
+
+            return Ok(details.Where(t => !t.DefaultValue || details.Count(t2 => t2.CauseTypeId == t.CauseTypeId) == 1)
+                .Select(t => new DetailsModel
             {
                 Id = t.Id,
                 CauseTypeId = t.CauseTypeId,
                 CauseType = t.CauseType.Title,
-                DiseaseId = t.DiseaseId,
-                Disease = t.Disease.Title,
-                Details = t.Details
+                Details = t.DefaultValue ? null : t.Details
             }));
         }
 
