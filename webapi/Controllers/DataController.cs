@@ -98,14 +98,6 @@ namespace webapi.Controllers
                 Value = c.Count()
             });
 
-            //var result = data.GroupBy(t => t.CauseDetails.Id).Select(t => new CauseModel
-            //{
-            //    Id = t.First().CauseDetails.CauseTypeId,
-            //    Title = t.First().CauseDetails.CauseType.Title,
-            //    Details = t.First().CauseDetails.DefaultValue ? null : t.First().CauseDetails.Details,
-            //    Value = t.Count()
-            //}).OrderBy(t => t.Id);
-
             return new SummaryModel
             {
                 DiseaseId = id,

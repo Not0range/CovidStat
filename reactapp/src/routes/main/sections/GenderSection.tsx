@@ -4,12 +4,13 @@ import $ from 'jquery';
 import AreaDataChart from "../../../components/AreaDataChart";
 import { Stats } from "../../../models/Stats";
 import '../styles/GenderSection.css';
+import { useAppSelector } from "../../../store";
 
 export default function GenderSection({cityId, districtId}: IProps) {
-
+    const types = useAppSelector(state => state.main.types);
+    
     const [dataMan, setDataMan] = useState<Stats[]>([]);
     const [dataWoman, setDataWoman] = useState<Stats[]>([]);
-    const [types, setTypes] = useState<string[]>([]);
 
     useEffect(() => {
         $.ajax('api/data/query/1', {
@@ -24,8 +25,6 @@ export default function GenderSection({cityId, districtId}: IProps) {
             processData: false,
             success: result => {
                 setDataMan(result.causes);
-                const t = (result.causes[0].values as any[]).map(t => t.key);
-                setTypes(t);
             }
         });
     }, [cityId, districtId]);

@@ -11,6 +11,7 @@ import BarDataChart from '../../../components/BarDataChart';
 import SegmentedButton from '../components/SegmentedButton';
 
 export default function MapSection() {
+    const types = useAppSelector(state => state.main.types);
     const country = useAppSelector(state => state.main.selectedCountry);
     const summary = useAppSelector(state => state.main.summary);
 
@@ -19,8 +20,10 @@ export default function MapSection() {
     const [dataTime, setDataTime] = useState<Stats[]>([]);
     const [dataDistrict, setDataDistrict] = useState<Stats[]>([]);
 
-    const [types, setTypes] = useState<string[]>([]);
-    const [checked, setChecked] = useState<boolean[]>([]);
+    const [checked, setChecked] = useState(types.map(() => true));
+    useEffect(() => {
+        setChecked(types.map(() => true));
+    }, [types]);
 
     useEffect(() => {
         const b = moment().subtract(periods[period].days + 1, 'days').format();
@@ -37,9 +40,6 @@ export default function MapSection() {
             processData: false,
             success: result => {
                 setDataTime(result.causes);
-                const t = (result.causes[0].values as any[]).map(t => t.key);
-                setTypes(t);
-                setChecked(t.map(() => true));
             }
         });
 

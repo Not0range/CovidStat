@@ -7,7 +7,8 @@ const mainSlice = createSlice({
     name: 'main',
     initialState: {
         summary: [],
-        districts: []
+        districts: [],
+        types: []
     } as IState,
     reducers: {
         setCountry: (state, action: PayloadAction<number | undefined>) => {
@@ -19,6 +20,12 @@ const mainSlice = createSlice({
         setDistricts: (state, action: PayloadAction<FullDistrict[]>) => {
             state.districts = action.payload;
         },
+        setTypes: (state, action: PayloadAction<string[]>) => {
+            state.types = action.payload;
+        },
+        setUsername: (state, action: PayloadAction<string | undefined>) => {
+            state.username = action.payload;
+        }
     }
 });
 
@@ -26,6 +33,8 @@ interface IState {
     selectedCountry?: number;
     summary: GeneralSummary[];
     districts: FullDistrict[];
+    types: string[];
+    username?: string;
 }
 
 export const store = configureStore({
@@ -40,4 +49,4 @@ export type AppDispatch = typeof store.dispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 export const useAppDispatch: () => AppDispatch = useDispatch;
 
-export const { setCountry, setSummary, setDistricts } = mainSlice.actions;
+export const { setCountry, setSummary, setDistricts, setTypes, setUsername } = mainSlice.actions;

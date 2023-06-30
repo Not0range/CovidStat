@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { chartColors, periods } from "../../../Utils";
 import '../styles/TableSection.css';
 import { Stats } from '../../../models/Stats';
+import { useAppSelector } from '../../../store';
 
 export default function TableSection() {
+    const types = useAppSelector(state => state.main.types);
     const [period, setPeriod] = useState(0);
 
     const [data, setData] = useState<Stats[]>([]);
-    const [types, setTypes] = useState<string[]>([]);
 
     useEffect(() => {
         const b = moment().subtract(periods[period].days + 1, 'days').format();
@@ -26,8 +27,6 @@ export default function TableSection() {
             processData: false,
             success: result => {
                 setData(result.causes);
-                const t = (result.causes[0].values as any[]).map(t => t.key);
-                setTypes(t);
             }
         });
     }, [period]);

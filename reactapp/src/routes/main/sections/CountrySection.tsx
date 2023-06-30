@@ -13,6 +13,7 @@ import ComboTextbox from "../components/ComboTextbox";
 import SegmentedButton from "../components/SegmentedButton";
 
 export default function CountrySection({ id }: IProps) {
+    const types = useAppSelector(state => state.main.types);
     const district = useAppSelector(state => state.main.districts.find(t => t.id == id));
     const dispatcher = useAppDispatch();
 
@@ -25,8 +26,10 @@ export default function CountrySection({ id }: IProps) {
     const [data, setData] = useState<Stats[]>([]);
     const [cityData, setCityData] = useState<Stats[]>([]);
 
-    const [types, setTypes] = useState<string[]>([]);
-    const [checked, setChecked] = useState<boolean[]>([]);
+    const [checked, setChecked] = useState(types.map(() => true));
+    useEffect(() => {
+        setChecked(types.map(() => true));
+    }, types);
 
     const [summary, setSummary] = useState<Summary[]>([]);
     const [summaryPeriod, setSummaryPeriod] = useState<Summary[]>([]);
@@ -142,9 +145,6 @@ export default function CountrySection({ id }: IProps) {
             success: result => {
                 setData(result.causes);
                 if (result.causes.length == 0) return;
-                const t = (result.causes[0].values as any[]).map(t => t.key);
-                setTypes(t);
-                setChecked(t.map(() => true));
             }
         });
     }, [id, period]);
