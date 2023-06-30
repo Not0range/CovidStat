@@ -4,7 +4,7 @@ import { setLoginDialog } from '../store/displaySlice';
 import { useAppDispatch, useAppSelector } from '../store/store';
 import '../styles/Header.css';
 import { setUsername } from '../store/mainSlice';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Header() {
     const navigate = useNavigate();
@@ -28,34 +28,38 @@ export default function Header() {
 
     return (
         <div className='main-header'>
-            <img src="/logo.png" alt='' />
+            <Link to={'/'}>
+                <img src="/logo.png" alt='' />
+            </Link>
             <div style={{ flexGrow: 1 }} />
             <a href='/' target='_blank'><i className='bx bxl-facebook bx-sm' /></a>
             <a href='/' target='_blank'><i className='bx bxl-instagram bx-sm' /></a>
             <a href='/' target='_blank'><i className='bx bxl-telegram bx-sm' /></a>
             <a href='/' target='_blank'><i className='bx bxl-whatsapp bx-sm' /></a>
-            {username === undefined ?
-                <input
-                    type='button'
-                    className='account-button'
-                    value={'Вход'}
-                    onClick={() => dispatcher(setLoginDialog(true))}
-                /> :
-                <div className='header-button-group'>
+            {
+                username === undefined ?
                     <input
                         type='button'
                         className='account-button'
-                        value={'Панель управления'}
-                        onClick={() => navigate('admin')}
-                    />
-                    <div style={{width: '5px'}} />
-                    <input
-                        type='button'
-                        className='account-button'
-                        value={'Выход'}
-                        onClick={logout}
-                    />
-                </div>}
+                        value={'Вход'}
+                        onClick={() => dispatcher(setLoginDialog(true))}
+                    /> :
+                    <div className='header-button-group'>
+                        <input
+                            type='button'
+                            className='account-button'
+                            value={'Панель управления'}
+                            onClick={() => navigate('admin')}
+                        />
+                        <div style={{ width: '5px' }} />
+                        <input
+                            type='button'
+                            className='account-button'
+                            value={'Выход'}
+                            onClick={logout}
+                        />
+                    </div>
+            }
             <div
                 className='login-dialog'
                 style={{ display: dialog ? '' : 'none' }}
@@ -65,11 +69,12 @@ export default function Header() {
                     <LoginDialog />
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 
 function LoginDialog() {
+    const navigate = useNavigate();
     const dispatcher = useAppDispatch();
 
     const [login, setLogin] = useState('');
@@ -92,6 +97,7 @@ function LoginDialog() {
             success: result => {
                 dispatcher(setUsername(result));
                 dispatcher(setLoginDialog(false));
+                navigate('admin');
             }
         })
     }

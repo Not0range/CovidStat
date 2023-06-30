@@ -5,6 +5,10 @@
     align-items: center;
 }
 
+.main-header>a:first-child {
+    height: 100%;
+}
+
 .main-header img {
     height: 100%;
     object-fit: contain;
