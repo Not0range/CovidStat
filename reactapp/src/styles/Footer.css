@@ -1,0 +1,21 @@
+footer {
+    padding: 10px;
+    height: 20%;
+}
+
+footer>div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 10px;
+    background-color: rgba(217, 217, 217, 0.6);
+    justify-content: space-around;
+}
+
+.footer-section2 h2 {
+    color: red;
+}
+
+.footer-section1 h3 {
+    font-weight: bold;
+}
